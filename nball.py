@@ -133,7 +133,7 @@ def main():
 
     if args.zero_energy and args.ball and args.ws_child:
         wsChildrenDic = dict()
-        with open(args.ws_child, 'r') as chfh:
+        with open(args.ws_child, 'r', encoding='utf-8') as chfh:
             for ln in chfh:
                 wlst = ln[:-1].split()
                 wsChildrenDic[wlst[0]] = wlst[1:]
