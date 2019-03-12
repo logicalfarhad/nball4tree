@@ -42,8 +42,6 @@ def initialize_ball(root, addDim=[], L0=0.1, R0=0.1,
     :param outputPath:
     :return:
     """
-    if root ="con.n.01":
-    	print("want to create con.n.01")
     w2v = [decimal.Decimal(ele*100) for ele in get_word2vector(root, word2vecDic=word2vecDic)]
     cpoint = w2v + [ele+10 for ele in wscatCodeDic[root]]+ addDim
     word2ballDic[root] = vec_norm(cpoint) + [L0, R0]
@@ -510,7 +508,7 @@ def fix_dim(maxsize, mindim, word2ballDic=dict(), bPath = '/Users/tdong/data/glo
                 print(bf, len(wlst), ballv[-1])
                 vec = vec_norm(ballv[:-2] + [decimal.Decimal(mindim)] * delta) + ballv[-2:]
                 word2ballDic[bf] = vec
-                if outputPath:
+                if bPath:
                     create_ball_file(bf, outputPath=bPath,word2ballDic=word2ballDic)
     return word2ballDic
 
@@ -567,4 +565,3 @@ def train_word2ball(root="",  outputPath = '', logFile='', wsChildrenDic=dict(),
                                                     maxsize=maxsize, mindim=mindim, logFile=logFile)
 
     testing_whole_family(outputPath=outputPath, wsChildrenDic=wsChildrenDic, outputBallFile=outputBallFile)
-

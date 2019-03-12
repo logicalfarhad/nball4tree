@@ -508,7 +508,7 @@ def fix_dim(maxsize, mindim, word2ballDic=dict(), bPath = '/Users/tdong/data/glo
                 print(bf, len(wlst), ballv[-1])
                 vec = vec_norm(ballv[:-2] + [decimal.Decimal(mindim)] * delta) + ballv[-2:]
                 word2ballDic[bf] = vec
-                if outputPath:
+                if bPath:
                     create_ball_file(bf, outputPath=bPath,word2ballDic=word2ballDic)
     return word2ballDic
 

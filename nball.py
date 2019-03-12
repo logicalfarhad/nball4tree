@@ -9,6 +9,7 @@ from nball4tree.experiments.membership_validation import show_membership_predict
 from nball4tree.experiments.consistency import maximum_deviation
 from nball4tree.config import DECIMAL_PRECISION
 decimal.getcontext().prec = DECIMAL_PRECISION
+from pathlib import Path, PureWindowsPath
 
 
 """
@@ -93,7 +94,8 @@ def main():
 
     args = parser.parse_args()
     if args.train_nball and args.w2v and args.ws_child and args.ws_catcode and args.log:
-        outputPath, nballFile = os.path.split(args.train_nball)
+        path_on_windows = PureWindowsPath(args.train_nball)
+        outputPath, nballFile = os.path.split(path_on_windows)
         logFile = os.path.join(outputPath, 'traing.log')
         outputPath = os.path.join(outputPath, "data_out")
 
@@ -104,7 +106,7 @@ def main():
         train_word2ball(root="*root*", outputPath=outputPath, wsChildrenDic=wsChildrenDic,
                         word2vecDic=word2vecDic, wscatCodeDic=wscatCodeDic, logFile=logFile,
                         word2ballDic=dict(),
-                        outputBallFile=args.train_nball)
+                        outputBallFile=PureWindowsPath(args.train_nball))
 
     if args.neighbors and args.ball:
         ballDic = load_ball_embeddings(args.ball)

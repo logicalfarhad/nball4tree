@@ -8,7 +8,7 @@ from nball4tree.util_vec import vec_norm
 decimal.getcontext().prec = DECIMAL_PRECISION
 
 
-def create_ball_file(ballname, word2ballDic=dict(), outputPath="E:/training_nball"):
+def create_ball_file(ballname, word2ballDic=dict(), outputPath=None):
     """
 
     :param ballname:
@@ -23,7 +23,7 @@ def create_ball_file(ballname, word2ballDic=dict(), outputPath="E:/training_nbal
         bfh.write(' '.join([str(ele) for ele in blst]) + "\n")
 
 
-def load_one_ball(ball, ipath="E:/training_nball/glove.6B.50Xball", word2ballDic=dict()):
+def load_one_ball(ball, ipath="E:/training_nball47634/data/glove/glove.6B/glove.6B.50Xball", word2ballDic=dict()):
     """
     :param ball:
     :param ipath:
@@ -36,7 +36,7 @@ def load_one_ball(ball, ipath="E:/training_nball/glove.6B.50Xball", word2ballDic
         return len(wlst), 0, word2ballDic
 
 
-def load_balls(ipath="E:/training_nball/glove.6B.50Xball", word2ballDic=dict()):
+def load_balls(ipath="E:/training_nball47634/data/glove/glove.6B/glove.6B.50Xball", word2ballDic=dict()):
     """
 
     :param ipath:
@@ -125,21 +125,23 @@ def initialize_dictionaries(word2vecFile=None, catDicFile=None, wsChildrenFile =
         print('file does not exist:', word2vecFile)
         return
 
-    with open(word2vecFile, 'r', encoding='utf-8') as w2v:
-        for line in w2v.readlines():
-            wlst = line.strip().split()
+    with open(word2vecFile, 'r',encoding='utf-8') as w2v:
+        for line in w2v:
+            wlst = line.strip()
+            print(wlst[0])
             word2vecDic[wlst[0]] = vec_norm([float(ele) for ele in wlst[1:]])
 
     if os.path.isfile(catDicFile):
         with open(catDicFile, 'r', encoding='utf-8') as cfh:
-            for ln in cfh.readlines():
-                wlst = ln[:-1].split()
+            for ln in cfh:
+                wlst = ln[:-1]
+                print(wlst[0])
                 wscatCodeDic[wlst[0]] = [int(ele) for ele in wlst[1:]]
 
     if os.path.isfile(wsChildrenFile):
-        with open(wsChildrenFile, 'r', encoding='utf-8') as chfh:
+        with open(wsChildrenFile, 'r',encoding='utf-8') as chfh:
             for ln in chfh:
-                wlst = ln[:-1].split()
+                wlst = ln[:-1]
                 wsChildrenDic[wlst[0]] = wlst[1:]
     return wsChildrenDic, word2vecDic, wscatCodeDic
 
@@ -167,8 +169,8 @@ def get_all_words(aFile):
     return words
 
 
-def create_parent_children_file(ln, ofile="E:/training_nball/glove_wordSenseChildren.txt",
-                                w2vile= "E:/training_nball/glove.6B.50d.txt"):
+def create_parent_children_file(ln, ofile="E:/training_nball47634/data/glove_wordSenseChildren.txt",
+                                w2vile= "E:/training_nball47634/data/glove/glove.6B.50d.txt"):
     """
     the problem of this method is: a->b->c, but b is not in the w2v file, a and c are in the w2v.
     the relation between a->c is brocken
@@ -192,9 +194,9 @@ def create_parent_children_file(ln, ofile="E:/training_nball/glove_wordSenseChil
         ofh.write("".join(lines))
 
 
-def create_parent_children_file_from_path(ofile="E:/training_nball/glove_wordSenseChildren.txt.newest",
-                                            w2vFile= "E:/training_nball/glove.6B.50d.txt",
-                                            wsPath="E:/training_nball/wordSensePath.txt.new"):
+def create_parent_children_file_from_path(ofile="E:/training_nball47634/data/glove_wordSenseChildren.txt.newest",
+                                            w2vFile= "E:/training_nball47634/data/glove/glove.6B.50d.txt",
+                                            wsPath="E:/training_nball47634/data/glove/wordSensePath.txt.new"):
     def find_parent_of(x, ancestor=None):
         for lst in [[ele.name() for ele in hlst] for hlst in wn.synset(x).hypernym_paths()]:
             if ancestor in lst:
@@ -242,9 +244,9 @@ def create_parent_children_file_from_path(ofile="E:/training_nball/glove_wordSen
         ofh.write("".join(lines))
 
 
-def clean_parent_children_file(ifile="E:/training_nball/glove.6B.children.txt",
-                              w2vFile= "E:/training_nball/glove.6B.50d.txt",
-                               ofile="E:/training_nball/glove_wordSenseChildren.txt"):
+def clean_parent_children_file(ifile="E:/training_nball47634/myDocs/glove.6B.tree.input/glove.6B.children.txt",
+                              w2vFile= "E:/training_nball47634/data/glove/glove.6B.50d.txt",
+                               ofile="E:/training_nball47634/data/glove_wordSenseChildren.txt"):
     lines = []
     with open(w2vFile, 'r') as ifh:
         vocLst = [ele.split()[0] for ele in ifh.readlines()]
@@ -288,8 +290,8 @@ def clean_wordsense_path(ifile="", w2vFile ="", ofile=""):
         ofh.write("".join(lines))
 
 
-def create_ws_path(ifile="E:/training_nball/glove_wordSenseChildren57287.txt.newest.clean",
-                   oWsPathfile="E:/training_nball/glove_wordSensePath57287.txt.newest"):
+def create_ws_path(ifile="E:/training_nball47634/data/glove_wordSenseChildren57287.txt.newest.clean",
+                   oWsPathfile="E:/training_nball47634/data/glove_wordSensePath57287.txt.newest"):
     """
     load all word-senses and wsChild2ParentDic from ifile
     for each ws:
@@ -379,10 +381,10 @@ def generate_ws_cat_codes(cpathFile = "",
     return nm, ml
 
 
-def check_whether_tree(ifile="/Users/tdong/data/glove_wordSenseChildren57285.txt.newest",
-                       ofile="/Users/tdong/data/glove_wordSenseChildren57285.txt.newest.clean",
-                       oWsPathfile="/Users/tdong/data/glove_wordSensePath57285.txt.newest.clean",
-                       oCatCodeFile="/Users/tdong/data/glove_wordSenseCatCode57285.txt.newest.clean"):
+def check_whether_tree(ifile="E:/training_nball47634/data/glove_wordSenseChildren57285.txt.newest",
+                       ofile="E:/training_nball47634/data/glove_wordSenseChildren57285.txt.newest.clean",
+                       oWsPathfile="E:/training_nball47634/data/glove_wordSensePath57285.txt.newest.clean",
+                       oCatCodeFile="E:/training_nball47634/data/glove_wordSenseCatCode57285.txt.newest.clean"):
     def appear2times(a, alst):
         if a in alst:
             loc = alst.index(a)
@@ -440,7 +442,7 @@ def check_whether_tree(ifile="/Users/tdong/data/glove_wordSenseChildren57285.txt
                                  depth=17)
 
 
-def get_all_decendents(node, ifile="/Users/tdong/data/glove_wordSenseChildren57285.txt.newest.clean"):
+def get_all_decendents(node, ifile="E:/training_nball47634/data/glove_wordSenseChildren57285.txt.newest.clean"):
     wsDic = defaultdict()
     with open(ifile, 'r') as ifh:
         for ln in ifh:
@@ -453,7 +455,7 @@ def get_all_decendents(node, ifile="/Users/tdong/data/glove_wordSenseChildren572
     return rlt
 
 
-def check_two_forests_connected(node1, node2, ifile="/Users/tdong/data/glove_wordSenseChildren57285.txt.newest.clean"):
+def check_two_forests_connected(node1, node2, ifile="E:/training_nball47634/data/glove_wordSenseChildren57285.txt.newest.clean"):
     lst1 = get_all_decendents(node1, ifile=ifile)
     lst2 = get_all_decendents(node2, ifile=ifile)
     rlt = [ele for ele in lst1 if ele in lst2]
@@ -463,16 +465,15 @@ def check_two_forests_connected(node1, node2, ifile="/Users/tdong/data/glove_wor
 
 if __name__ == "__main__":
     # check_two_forests_connected('body.n.02', 'organization.n.01',
-    #                            ifile="/Users/tdong/data/glove_wordSenseChildren57285.txt.newest.clean")
+    #                            ifile="E:/training_nball47634/data/glove_wordSenseChildren57285.txt.newest.clean")
     check_whether_tree()
-    # create_ws_path(ifile="/Users/tdong/data/glove_wordSenseChildren57285.txt.newest.clean",
-    #               ofile="/Users/tdong/data/glove_wordSensePath57285.txt.newest.clean")
+    # create_ws_path(ifile="E:/training_nball47634/data/glove_wordSenseChildren57285.txt.newest.clean",
+    #               ofile="E:/training_nball47634/data/glove_wordSensePath57285.txt.newest.clean")
     #  create_wordsense_path_from_ws_children()
 
-    # clean_wordsense_path(ifile="/Users/tdong/data/glove/wordSensePath.txt",
-    #                     w2vFile = "/Users/tdong/data/glove/glove.6B.50d.txt",
-    #                     ofile="/Users/tdong/data/glove/wordSensePath.txt.new")
+    # clean_wordsense_path(ifile="E:/training_nball47634/data/glove/wordSensePath.txt",
+    #                     w2vFile = "E:/training_nball47634/data/glove/glove.6B.50d.txt",
+    #                     ofile="E:/training_nball47634/data/glove/wordSensePath.txt.new")
     # create_parent_children_file_from_path()
     # clean_parent_children_file()
-    # ball_counter("/Users/tdong/data/glove_wordSenseChildren.txt.newest")
-
+    # ball_counter("E:/training_nball47634/data/glove_wordSenseChildren.txt.newest")
